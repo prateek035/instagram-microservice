@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -20,21 +20,33 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String email;
+
+    @Column(length = 40, unique = true)
+    private String userName;
+
     private String password;
+
+    @Column(length = 30)
     private String firstName;
+
+    @Column(length = 30)
     private String lastName;
+
+    @Column(columnDefinition = "boolean default false")
     private boolean isVerified;
+
+    @Column(length = 6)
     private String gender;
 
     @CreationTimestamp
     private Timestamp createdAt;
 
+    @Column(length = 10)
+    @Pattern(regexp="(^$|[0-9]{10})")
     private String contactNo;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Post> posts;
-
 
 
 }
