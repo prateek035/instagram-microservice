@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +29,9 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    private List<Image> images;
 
     @CreationTimestamp
     private Timestamp createdAt;
