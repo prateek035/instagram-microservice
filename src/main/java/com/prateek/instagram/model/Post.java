@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
@@ -27,10 +25,9 @@ public class Post {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post",cascade = CascadeType.REMOVE, orphanRemoval=true)
     private List<Image> images;
 
     @CreationTimestamp
