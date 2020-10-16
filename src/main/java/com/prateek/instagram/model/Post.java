@@ -23,11 +23,11 @@ public class Post {
     @Column(length = 120)
     private String caption;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "post",cascade = CascadeType.REMOVE, orphanRemoval=true)
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<Image> images;
 
     @CreationTimestamp
