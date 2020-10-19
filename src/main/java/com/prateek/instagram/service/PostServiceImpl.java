@@ -80,12 +80,12 @@ public class PostServiceImpl implements PostService{
             Post post = postRepository.save(modelMapper.map(postDto,Post.class));
 
             ImageDto imageDto = new ImageDto();
-            List<ImageDto> images = postDto.getImageURLs().
+            List<ImageDto> imageDtoList = postDto.getImageURLs().
                     stream().map(imageUrl -> {
                 return imageDto.setPostId(post.getId()).setImageURL(imageUrl);
             }).collect(Collectors.toList());
 
-            images.forEach(image -> imageRepository.save(modelMapper.map(image, Image.class)) );
+            imageDtoList.forEach(image -> imageRepository.save(modelMapper.map(image, Image.class)) );
 
             return MapperUtil.convertToResponseDto(201,
                     "Post added Success!",

@@ -19,10 +19,17 @@ public class Like {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private Long postId;
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "post_id")
+    private Post post;
+
     private Long userId;
 
     @CreationTimestamp
     private Timestamp likedAt;
 
+    public Like(Post post, Long userId) {
+        this.post=post;
+        this.userId=userId;
+    }
 }

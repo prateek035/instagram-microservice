@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
         return MapperUtil.convertToResponseDto(200,
                 "User Deleted!",
-                Collections.emptyList());
+                null);
     }
 
     @Override

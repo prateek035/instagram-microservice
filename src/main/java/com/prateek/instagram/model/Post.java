@@ -30,6 +30,10 @@ public class Post {
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
     private List<Image> images;
 
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Like> likes;
+
     @CreationTimestamp
     private Timestamp createdAt;
 
