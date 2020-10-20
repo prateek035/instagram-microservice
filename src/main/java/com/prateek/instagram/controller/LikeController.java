@@ -23,22 +23,35 @@ public class LikeController {
 
     @PostMapping("/like")
     public ResponseDto<LikeDto> likePost(@PathVariable("userId") Long userId,
-                                         @PathVariable("postId") Long postId) throws Exception {
+                                         @PathVariable("postId") Long postId) {
 
-        return MapperUtil.convertToResponseDto(200,
-                                            "You liked a post!",
-                                            likeService.likePost(userId, postId)
-        );
+        try {
+            return MapperUtil.convertToResponseDto(200,
+                    "You liked a post!",
+                    likeService.likePost(userId, postId));
+        }catch(Exception e) {
+
+            return MapperUtil.convertToResponseDto(404,
+                    e.getMessage(),
+                    null);
+        }
+
+
     }
 
     @DeleteMapping("/like")
     public ResponseDto<Object> dislikePost(@PathVariable("userId") Long userId,
-                                           @PathVariable("postId") Long postId) throws PostDoesNotExistException, LikeDoesNotExistException {
+                                           @PathVariable("postId") Long postId) {
+        try {
+            return MapperUtil.convertToResponseDto(200,
+                    "You disliked a post!",
+                    likeService.dislikePost(userId, postId));
 
-        return MapperUtil.convertToResponseDto(200,
-                                            "You disliked a post!",
-                                            likeService.dislikePost(userId, postId)
-        );
+        }catch(PostDoesNotExistException |  LikeDoesNotExistException e) {
+            return MapperUtil.convertToResponseDto(404,
+                    e.getMessage(),
+                    null);
+        }
     }
 
     @GetMapping("/likes")

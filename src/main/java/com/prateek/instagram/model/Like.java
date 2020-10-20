@@ -20,7 +20,7 @@ public class Like {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
     private Long userId;

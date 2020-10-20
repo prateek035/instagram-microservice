@@ -48,11 +48,11 @@ public class LikeServiceImpl implements LikeService{
         Optional<Post> optionalPost = postRepository.findById(postId);
 
         if(optionalPost.isEmpty()) {
-            throw new PostDoesNotExistException(String.format("Post : %d does not exist.",postId));
+            throw new PostDoesNotExistException();
         }
 
         if(!likeRepository.existsByPostIdAndUserId(postId,userId)) {
-            throw new LikeDoesNotExistException("You need to like before disliking post.");
+            throw new LikeDoesNotExistException();
         }
 
         likeRepository.deleteByPostIdAndUserId(postId,userId);
@@ -69,11 +69,11 @@ public class LikeServiceImpl implements LikeService{
         Optional<User> optionalUser = userRepository.findById(userId);
 
         if(optionalUser.isEmpty()) {
-            throw new UserDoesNotExistException(String.format("User : %d does not exist",userId));
+            throw new UserDoesNotExistException();
         }
 
         if(optionalPost.isEmpty()) {
-            throw new PostDoesNotExistException(String.format("Post : %d does not exist.",postId));
+            throw new PostDoesNotExistException();
         }
 
         if(likeRepository.existsByPostIdAndUserId(postId, userId)) {

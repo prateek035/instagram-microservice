@@ -24,7 +24,7 @@ public class Post {
     private String caption;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "post",cascade = CascadeType.ALL)
