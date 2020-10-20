@@ -8,7 +8,7 @@ import com.prateek.instagram.model.User;
 import com.prateek.instagram.repository.FollowMapRepository;
 import com.prateek.instagram.repository.UserRepository;
 import com.prateek.instagram.util.MapperUtil;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,16 +18,11 @@ import java.util.stream.Collectors;
 @Service
 public class FollowServiceImpl implements FollowService{
 
-    private final UserRepository userRepository;
-    private final FollowMapRepository followMapRepository;
+    @Autowired
+    private  UserRepository userRepository;
 
-    ModelMapper modelMapper = new ModelMapper();
-
-
-    public FollowServiceImpl(UserRepository userRepository, FollowMapRepository followMapRepository) {
-        this.userRepository = userRepository;
-        this.followMapRepository = followMapRepository;
-    }
+    @Autowired
+    private FollowMapRepository followMapRepository;
 
     @Override
     public List<UserDto> getFollower(Long userId) throws UserDoesNotExistException {
@@ -41,7 +36,6 @@ public class FollowServiceImpl implements FollowService{
                 .map(FollowMap::getFollower)
                 .map(MapperUtil::buildUserDto)
                 .collect(Collectors.toList());
-
     }
 
     @Override
@@ -71,9 +65,9 @@ public class FollowServiceImpl implements FollowService{
         if(followUser.isEmpty())
             throw new UserDoesNotExistException("Target User does not exist");
 
-        return modelMapper.map(followMapRepository.save(new FollowMap()
+        return MapperUtil.buildFollowMapDto(followMapRepository.save(new FollowMap()
                                 .setFollower(followUser.get())
-                                .setUser(user.get())), FollowMapDto.class);
+                                .setUser(user.get())));
     }
 
     @Override

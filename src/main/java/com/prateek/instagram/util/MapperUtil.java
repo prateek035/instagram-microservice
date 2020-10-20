@@ -65,6 +65,14 @@ public class MapperUtil {
         return user;
     }
 
+    public static FollowMap buildFollowMap(FollowMapDto followMapDto) {
+        return modelMapper.map(followMapDto, FollowMap.class);
+    }
+
+    public static FollowMapDto buildFollowMapDto(FollowMap followMap) {
+        return modelMapper.map(followMap, FollowMapDto.class);
+    }
+
     public static Like buildLike(LikeDto likeDto) {
         return modelMapper.map(likeDto, Like.class);
     }

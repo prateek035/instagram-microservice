@@ -6,6 +6,7 @@ import com.prateek.instagram.dto.UserDto;
 import com.prateek.instagram.exception.UserDoesNotExistException;
 import com.prateek.instagram.service.FollowService;
 import com.prateek.instagram.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,16 +15,11 @@ import java.util.List;
 @RequestMapping("/api/v1/user/{userId}")
 public class FollowMapController {
 
+    @Autowired
     private FollowService followService;
-
-
-    public FollowMapController(FollowService followService) {
-        this.followService = followService;
-    }
 
     @GetMapping("/followers")
     public ResponseDto<List<UserDto>> getAllFollowerUser(@PathVariable("userId") Long userId) {
-
 
         try {
             return MapperUtil.convertToResponseDto(200,
