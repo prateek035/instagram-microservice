@@ -1,74 +1,46 @@
 package com.prateek.instagram.service;
 
-import com.prateek.instagram.dto.ResponseDto;
 import com.prateek.instagram.dto.UserDto;
 import com.prateek.instagram.model.User;
 import com.prateek.instagram.repository.UserRepository;
 import com.prateek.instagram.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserRepository userRepository;
-
-    public UserServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private  UserRepository userRepository;
 
     @Override
-    public ResponseDto<UserDto> getUser(Long id) {
+    public Optional<UserDto> getUser(Long id) {
+
         Optional<User> optionalUser = userRepository.findById(id);
-
-        if(optionalUser.isPresent()) {
-            return MapperUtil.convertToResponseDto(200,
-                    "User Found!",
-                    MapperUtil.buildUserDto(optionalUser.get()));
-        }else{
-            return MapperUtil.convertToResponseDto(404,
-                    "User Not Found!",
-                    new UserDto());
-        }
+        return optionalUser.map(MapperUtil::buildUserDto);
     }
 
     @Override
-    public ResponseDto<Object> deleteUser(Long id) {
+    public String deleteUser(Long id) {
         userRepository.deleteById(id);
 
-        return MapperUtil.convertToResponseDto(200,
-                "User Deleted!",
-                null);
+        return String.format("User with ID : %d deleted Successfully.", id);
     }
 
     @Override
-    public ResponseDto<UserDto> addUser(UserDto userDto) {
-        try{
-            User user = MapperUtil.buildUser(userDto);
-            userRepository.save(user);
-            return MapperUtil.convertToResponseDto(201,
-                    "User created Successfully!", userDto);
+    public UserDto addUser(UserDto userDto) throws DataIntegrityViolationException {
 
-        }catch(DataIntegrityViolationException e){
-            return MapperUtil.convertToResponseDto(400,
-                    "Username already taken!",userDto);
-        }
+        User user = MapperUtil.buildUser(userDto);
+        return MapperUtil.buildUserDto(userRepository.save(user));
     }
 
     @Override
-    public ResponseDto<UserDto> updateUser(UserDto userDto) {
-        try{
-            User user = MapperUtil.buildUser(userDto);
-            userRepository.save(user);
-            return MapperUtil.convertToResponseDto(200,
-                    "User Updated Successfully!", userDto);
-        }catch(DataIntegrityViolationException e) {
-            return MapperUtil.convertToResponseDto(400,
-                    "Username already taken!", userDto);
-        }
+    public UserDto updateUser(UserDto userDto) {
+
+        User user = MapperUtil.buildUser(userDto);
+        return MapperUtil.buildUserDto(userRepository.save(user));
     }
 }
