@@ -1,14 +1,14 @@
 package com.prateek.instagram.util;
 
-import com.prateek.instagram.dto.CommentDto;
-import com.prateek.instagram.dto.ResponseDto;
-import com.prateek.instagram.dto.UserDto;
+import com.prateek.instagram.dto.*;
 import com.prateek.instagram.model.Comment;
+import com.prateek.instagram.model.Image;
 import com.prateek.instagram.model.Post;
 import com.prateek.instagram.model.User;
 import com.prateek.instagram.repository.CommentRepository;
 import com.prateek.instagram.repository.PostRepository;
 import com.prateek.instagram.repository.UserRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +16,7 @@ import java.util.Optional;
 
 public class MapperUtil {
 
+    private static final ModelMapper modelMapper = new ModelMapper();
 
 //    public static Comment buildComment(CommentDto commentDto) {
 //
@@ -65,6 +66,22 @@ public class MapperUtil {
         user.setGender(userDto.getGender());
 
         return user;
+    }
+
+    public static Post buildPost(PostDto postDto) {
+        return modelMapper.map(postDto, Post.class);
+    }
+
+    public static PostDto buildPostDto(Post post) {
+        return modelMapper.map(post, PostDto.class);
+    }
+
+    public static Image buildImage(ImageDto imageDto) {
+        return modelMapper.map(imageDto, Image.class);
+    }
+
+    public static ImageDto buildImageDto(Image image) {
+        return modelMapper.map(image,ImageDto.class);
     }
 
     public static <T> ResponseDto<T> convertToResponseDto(Integer status,
