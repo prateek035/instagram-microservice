@@ -11,7 +11,7 @@ import com.prateek.instagram.repository.CommentRepository;
 import com.prateek.instagram.repository.PostRepository;
 import com.prateek.instagram.repository.UserRepository;
 import com.prateek.instagram.util.MapperUtil;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,17 +21,14 @@ import java.util.stream.Collectors;
 @Service
 public class CommentServiceImpl implements CommentService{
 
-    private final PostRepository postRepository;
-    private final CommentRepository commentRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private  PostRepository postRepository;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private  CommentRepository commentRepository;
 
-    public CommentServiceImpl(PostRepository postRepository, CommentRepository commentRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.commentRepository = commentRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private  UserRepository userRepository;
 
     @Override
     public List<CommentDto> getAllComment(Long postId) throws PostDoesNotExistException {
@@ -42,9 +39,9 @@ public class CommentServiceImpl implements CommentService{
             throw new PostDoesNotExistException();
         }
 
-        List<Comment> comments = commentRepository.getAllByPost(optionalPost.get());
-
-        return comments.stream().parallel()
+        return commentRepository.getAllByPost(optionalPost.get())
+                .stream()
+                .parallel()
                 .map(MapperUtil::buildCommentDto)
                 .filter(commentDto -> commentDto.getReplyId() == null)
                 .collect(Collectors.toList());
@@ -58,9 +55,8 @@ public class CommentServiceImpl implements CommentService{
             throw new CommentDoesNotExistException();
         }
 
-        List<Comment> comments = commentRepository.getAllByReplyId(commentId);
-
-        return comments.stream()
+        return commentRepository.getAllByReplyId(commentId)
+                .stream()
                 .map(MapperUtil::buildCommentDto)
                 .collect(Collectors.toList());
 

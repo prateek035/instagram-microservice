@@ -7,6 +7,7 @@ import com.prateek.instagram.exception.PostDoesNotExistException;
 import com.prateek.instagram.exception.UserDoesNotExistException;
 import com.prateek.instagram.service.CommentService;
 import com.prateek.instagram.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,11 +16,8 @@ import java.util.List;
 @RequestMapping("/api/v1/user/{userId}/post/{postId}")
 public class CommentController {
 
-    private final CommentService commentService;
-
-    public CommentController(CommentService commentService) {
-        this.commentService = commentService;
-    }
+    @Autowired
+    private  CommentService commentService;
 
     @GetMapping("/comments")
     public ResponseDto<List<CommentDto>> getAllComments(@PathVariable("postId") Long postId) {
@@ -40,8 +38,6 @@ public class CommentController {
 
     @GetMapping("/comment/{commentId}")
     public ResponseDto<List<CommentDto>> getAllReply(@PathVariable("commentId") Long commentId) {
-
-
         try{
             return MapperUtil.convertToResponseDto(200,
                     "List of all Replies to Comment",
@@ -72,8 +68,6 @@ public class CommentController {
                     e.getMessage(),
                     null);
         }
-
-
     }
 
     @PutMapping("/comment/{commentId}")
