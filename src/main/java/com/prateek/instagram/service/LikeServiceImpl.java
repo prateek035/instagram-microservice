@@ -10,7 +10,8 @@ import com.prateek.instagram.model.User;
 import com.prateek.instagram.repository.LikeRepository;
 import com.prateek.instagram.repository.PostRepository;
 import com.prateek.instagram.repository.UserRepository;
-import org.modelmapper.ModelMapper;
+import com.prateek.instagram.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,30 +22,27 @@ import java.util.stream.Collectors;
 @Service
 public class LikeServiceImpl implements LikeService{
 
-    private final PostRepository postRepository;
-    private final LikeRepository likeRepository;
-    private final UserRepository userRepository;
+    @Autowired
+    private  PostRepository postRepository;
 
-    private final ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private  LikeRepository likeRepository;
 
-    public LikeServiceImpl(PostRepository postRepository, LikeRepository likeRepository, UserRepository userRepository) {
-        this.postRepository = postRepository;
-        this.likeRepository = likeRepository;
-        this.userRepository = userRepository;
-    }
+    @Autowired
+    private  UserRepository userRepository;
 
     @Override
     public List<LikeDto> getAllLikes(Long postId) {
 
         return likeRepository.findAllByPostId(postId)
                 .stream()
-                .map(like -> modelMapper.map(like, LikeDto.class))
+                .map(MapperUtil::buildLikeDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public Object dislikePost(Long userId, Long postId) throws PostDoesNotExistException, LikeDoesNotExistException {
+    public String dislikePost(Long userId, Long postId) throws PostDoesNotExistException, LikeDoesNotExistException {
         Optional<Post> optionalPost = postRepository.findById(postId);
 
         if(optionalPost.isEmpty()) {
@@ -56,7 +54,7 @@ public class LikeServiceImpl implements LikeService{
         }
 
         likeRepository.deleteByPostIdAndUserId(postId,userId);
-        return null;
+        return String.format("User: %d disliked post : %d", userId, postId);
     }
 
     // Removes older like and insert a new like with fresh timestamp.
@@ -79,7 +77,6 @@ public class LikeServiceImpl implements LikeService{
         if(likeRepository.existsByPostIdAndUserId(postId, userId)) {
             dislikePost(userId, postId);
         }
-        return modelMapper.map(likeRepository.save(new Like(optionalPost.get(), userId)), LikeDto.class);
-
+        return MapperUtil.buildLikeDto(likeRepository.save(new Like(optionalPost.get(), userId)));
     }
 }

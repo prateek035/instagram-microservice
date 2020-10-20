@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface LikeService {
     List<LikeDto> getAllLikes(Long postId);
-    Object dislikePost(Long userId, Long postId) throws PostDoesNotExistException, LikeDoesNotExistException;
+    String dislikePost(Long userId, Long postId) throws PostDoesNotExistException, LikeDoesNotExistException;
     LikeDto likePost(Long userId, Long postId) throws Exception;
 }

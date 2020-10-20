@@ -1,10 +1,7 @@
 package com.prateek.instagram.util;
 
 import com.prateek.instagram.dto.*;
-import com.prateek.instagram.model.Comment;
-import com.prateek.instagram.model.Image;
-import com.prateek.instagram.model.Post;
-import com.prateek.instagram.model.User;
+import com.prateek.instagram.model.*;
 import com.prateek.instagram.repository.CommentRepository;
 import com.prateek.instagram.repository.PostRepository;
 import com.prateek.instagram.repository.UserRepository;
@@ -66,6 +63,14 @@ public class MapperUtil {
         user.setGender(userDto.getGender());
 
         return user;
+    }
+
+    public static Like buildLike(LikeDto likeDto) {
+        return modelMapper.map(likeDto, Like.class);
+    }
+
+    public static LikeDto buildLikeDto(Like like) {
+        return modelMapper.map(like,LikeDto.class);
     }
 
     public static Post buildPost(PostDto postDto) {

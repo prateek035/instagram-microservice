@@ -6,6 +6,7 @@ import com.prateek.instagram.exception.LikeDoesNotExistException;
 import com.prateek.instagram.exception.PostDoesNotExistException;
 import com.prateek.instagram.service.LikeService;
 import com.prateek.instagram.util.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +15,9 @@ import java.util.List;
 @RequestMapping("/api/v1/user/{userId}/post/{postId}")
 public class LikeController {
 
+    @Autowired
+    private  LikeService likeService;
 
-    private final LikeService likeService;
-
-    public LikeController(LikeService likeService) {
-        this.likeService = likeService;
-    }
 
     @PostMapping("/like")
     public ResponseDto<LikeDto> likePost(@PathVariable("userId") Long userId,
