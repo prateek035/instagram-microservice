@@ -2,30 +2,11 @@ package com.prateek.instagram.util;
 
 import com.prateek.instagram.dto.*;
 import com.prateek.instagram.model.*;
-import com.prateek.instagram.repository.CommentRepository;
-import com.prateek.instagram.repository.PostRepository;
-import com.prateek.instagram.repository.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 public class MapperUtil {
 
     private static final ModelMapper modelMapper = new ModelMapper();
-
-//    public static Comment buildComment(CommentDto commentDto) {
-//
-//        Optional<User> optionalUser = userRepository.findById(commentDto.getUserId());
-//        Optional<Post> optionalPost = postRepository.findById(commentDto.getPostId());
-//        Optional<Comment> optionalComment = commentRepository.findById(commentDto.getReplyId());
-//
-//        return new Comment().setReply(optionalComment.orElse(null))
-//                .setUser(optionalUser.orElse(null))
-//                .setPost(optionalPost.orElse(null))
-//                .setDescription(commentDto.getDescription());
-//    }
 
     public static CommentDto buildCommentDto(Comment comment) {
 
