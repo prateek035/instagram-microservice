@@ -3,6 +3,8 @@ package com.prateek.instagram.service;
 import com.prateek.instagram.dto.UserDto;
 import com.prateek.instagram.model.User;
 import com.prateek.instagram.repository.UserRepository;
+import com.prateek.instagram.util.MapperUtil;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +20,9 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class UserServiceImplTest {
 
 
@@ -30,8 +31,11 @@ public class UserServiceImplTest {
     private UserDto userDto;
     private User user;
 
-    @Mock
-    UserRepository userRepository;
+    final UserRepository userRepository = Mockito.mock(UserRepository.class,
+                                Mockito.withSettings().verboseLogging());
+
+//    @Mock
+//    UserRepository userRepository;
 
     @InjectMocks
     UserServiceImpl userService;
@@ -50,47 +54,58 @@ public class UserServiceImplTest {
 
     @Test
     public void shouldFetchUserSuccessfully(){
-        // Given
+
         given(userRepository.findById(10L)).willReturn(Optional.of(user));
-        // when
+
         Optional<UserDto> responseUserDto = userService.getUser(10L);
-        // then
+
         assertEquals(Optional.of(userDto), responseUserDto);
-        verify(userRepository).findById(any(Long.class));
+        verify(userRepository,times(1)).findById(any(Long.class));
     }
 
     @Test
     public void shouldAddUserSuccessfully() {
-        // Given
+
         given(userRepository.save(any(User.class))).willReturn(user);
-         //when
+
         UserDto savedUser = userService.addUser(userDto);
-        // then
         assertEquals(userDto, savedUser);
         verify(userRepository, times(1)).save(any(User.class));
     }
 
+    @Test(expected = NullPointerException.class)
+    public void shouldThrowErrorWhenAddUserWithExistingUserName() {
+
+        given(userRepository.findByUserName("test_u1")).willReturn(Optional.of(user));
+
+        userService.addUser(userDto);
+    }
+
     @Test
     public void shouldUpdateUserSuccessfully() {
-        //Given
+
         given(userRepository.save(any(User.class))).willReturn(user);
-        //when
+
         UserDto updatedUserDto = userService.updateUser(userDto);
-        //then
+
         assertEquals(userDto, updatedUserDto);
         verify(userRepository,times(1)).save(any(User.class));
     }
 
     @Test
     public void shouldDeleteUserSuccessFully() {
-        //Given
-        //when
+
         userService.deleteUser(10L);
         userService.deleteUser(20L);
-        //then
+
         verify(userRepository,times(2)).deleteById(any(Long.class));
 
     }
+
+//    @After
+//    public void teardown() {
+//        System.out.println("::::::"+ mockingDetails(userRepository).printInvocations());
+//    }
 
 
 }
