@@ -53,7 +53,7 @@ public class PostServiceTest {
     PostServiceImpl postService;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp()  {
 
         userDto = new UserDto().setId(10L)
                 .setUserName("test_u1")
@@ -150,7 +150,7 @@ public class PostServiceTest {
 
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown() {
         System.out.println("-----------------------TEST RUN COMPLETE------------------------");
     }
 
