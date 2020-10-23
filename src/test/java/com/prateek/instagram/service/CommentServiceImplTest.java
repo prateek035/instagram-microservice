@@ -147,9 +147,103 @@ public class CommentServiceImplTest {
                 .getAllByReplyId(any(Long.class));
     }
 
+    @Test
+    public void shouldAddCommentSuccess() {
 
+        given(userRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(user));
+        given(postRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(post));
 
+        given(commentRepository.findById(any(Long.class)))
+                .willReturn(Optional.empty());
 
+        given(commentRepository.save(any(Comment.class)))
+                .willReturn(comment);
+
+        try {
+            CommentDto savedCommentDto = commentService.addComment(10L,
+                                                                11L,
+                                                                 commentDto);
+
+            assertEquals(comment.getUser().getId(), savedCommentDto.getUserId());
+            assertNull(savedCommentDto.getReplyId());
+            assertEquals(comment.getPost().getId(), savedCommentDto.getPostId());
+            assertEquals(comment.getDescription(), savedCommentDto.getDescription());
+
+        } catch( Exception e) {
+            fail();
+        }
+
+        verify(commentRepository, times(1)).save(any(Comment.class));
+
+    }
+
+    @Test
+    public void shouldAddReplySuccess() {
+
+        given(userRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(user));
+        given(postRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(post));
+
+        given(commentRepository.findById(any(Long.class)))
+                .willReturn(Optional.of(comment));
+
+        given(commentRepository.save(any(Comment.class)))
+                .willReturn(reply);
+
+        try {
+            CommentDto savedCommentDto = commentService.addComment(10L,
+                    11L,
+                    replyDto);
+
+            System.out.println(reply);
+            System.out.println(savedCommentDto);
+
+            assertEquals(reply.getUser().getId(), savedCommentDto.getUserId());
+            assertEquals(reply.getReply().getId(), savedCommentDto.getReplyId());
+            assertEquals(reply.getPost().getId(), savedCommentDto.getPostId());
+            assertEquals(reply.getDescription(), savedCommentDto.getDescription());
+
+        } catch( Exception e) {
+            fail();
+        }
+
+        verify(commentRepository, times(1)).save(any(Comment.class));
+
+    }
+
+    @Test
+    public void shouldDeleteCommentOrReplySuccess() {
+        commentService.deleteComment(13L);
+
+        verify(commentRepository, times(1)).deleteById(any(Long.class));
+    }
+
+    @Test
+    public void shouldUpdateCommentOrReplySuccess() {
+        given(userRepository.findById(any(Long.class))).willReturn(Optional.of(user));
+        given(postRepository.findById(any(Long.class))).willReturn(Optional.of(post));
+        given(commentRepository.findById(any(Long.class))).willReturn(Optional.of(comment));
+        given(commentRepository.save(any(Comment.class)))
+                .willReturn(reply.setDescription("post desc. got changed"));
+
+        try {
+            CommentDto savedCommentDto = commentService.updateComment(10L,
+                    11L, 12L, commentDto);
+
+            assertEquals("post desc. got changed", savedCommentDto.getDescription());
+            assertEquals(reply.getReply().getId(),savedCommentDto.getReplyId());
+            assertEquals(reply.getPost().getId(), savedCommentDto.getPostId());
+            assertEquals(reply.getUser().getId(), savedCommentDto.getUserId());
+
+        } catch (Exception e) {
+            fail();
+        }
+
+        verify(commentRepository, times(1)).save(any(Comment.class));
+    }
 
 
     @After

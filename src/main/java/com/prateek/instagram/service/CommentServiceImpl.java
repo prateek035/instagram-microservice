@@ -1,5 +1,6 @@
 package com.prateek.instagram.service;
 
+import com.fasterxml.jackson.databind.cfg.MapperBuilder;
 import com.prateek.instagram.dto.CommentDto;
 import com.prateek.instagram.exception.CommentDoesNotExistException;
 import com.prateek.instagram.exception.PostDoesNotExistException;
@@ -79,16 +80,12 @@ public class CommentServiceImpl implements CommentService{
         if(optionalUser.isEmpty())
             throw new UserDoesNotExistException();
 
-        commentDto.setUserId(userId)
-                .setPostId(postId);
-
-        commentRepository.save(
+        return MapperUtil.buildCommentDto(commentRepository.save(
                 new Comment().setDescription(commentDto.getDescription())
                 .setReply(optionalComment.orElse(null))
                 .setPost(optionalPost.get())
                 .setUser(optionalUser.get())
-        );
-        return commentDto;
+        ));
     }
 
     @Override
@@ -116,18 +113,12 @@ public class CommentServiceImpl implements CommentService{
         if(optionalComment.isEmpty())
             throw new CommentDoesNotExistException();
 
-
-        commentDto.setUserId(userId)
-                    .setPostId(postId);
-
-        commentRepository.save(
+        return MapperUtil.buildCommentDto(commentRepository.save(
                 new Comment().setDescription(commentDto.getDescription())
                         .setId(commentId)
                         .setUser(optionalUser.get())
                         .setPost(optionalPost.get())
-        );
-
-        return commentDto;
+        ));
 
     }
 }
