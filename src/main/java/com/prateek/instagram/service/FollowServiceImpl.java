@@ -47,7 +47,7 @@ public class FollowServiceImpl implements FollowService{
 
         return followMapRepository.findAllByFollower(optionalUser.get())
                 .stream()
-                .map(FollowMap::getFollower)
+                .map(FollowMap::getUser)
                 .map(MapperUtil::buildUserDto)
                 .collect(Collectors.toList());
     }
