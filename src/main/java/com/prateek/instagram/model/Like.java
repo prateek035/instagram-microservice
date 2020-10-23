@@ -3,6 +3,7 @@ package com.prateek.instagram.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.sql.Timestamp;
 @AllArgsConstructor
 @Entity
 @Table(name = "likes")
+@Accessors(chain = true)
 public class Like {
 
     @Id
